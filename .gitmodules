@@ -1,0 +1,6 @@
+[submodule "old_fe"]
+	path = old_fe
+	url = https://gitlab.brin.go.id/brinrockstar/irif-frontend
+[submodule "old_be"]
+	path = old_be
+	url = https://gitlab.brin.go.id/brinrockstar/irif-backend
