@@ -1,4 +1,16 @@
 services:
+  minio:
+    image: minio/minio:latest
+    environment:
+      MINIO_ROOT_USER: minioBRIN # Ganti sesuai kebutuhan
+      MINIO_ROOT_PASSWORD: minioBRIN # Ganti sesuai kebutuhan
+    ports:
+      - "9000:9000" # Port API MinIO
+      - "9001:9001" # Port Konsol Admin
+    volumes:
+      - ./docker-dev-volumes/minio_data:/data # Volume untuk menyimpan data
+      - ./docker-dev-volumes/minio_config:/root/.minio # Volume untuk menyimpan konfigurasi
+    command: server /data --console-address ":9001"
   db:
     ports:
       - 5432:5432
