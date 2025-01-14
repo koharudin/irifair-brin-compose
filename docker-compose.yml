@@ -20,16 +20,6 @@ services:
       - POSTGRES_USER=postgres
     volumes:
       - ./docker-dev-volumes/pg_data:/var/lib/postgresql/data  # Persist PostgreSQL data
-  fe : 
-    build : 
-      context : .
-      dockerfile : Dockerfile-fe
-    tty: true
-    ports :     
-      - 83:3000
-    volumes:
-       - ./fe:/app
-       - /app/node_modules
   old_fe : 
     build : 
       context : .
