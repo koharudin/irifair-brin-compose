@@ -43,4 +43,6 @@ services:
     ports :     
         - 82:80
     volumes:
-      - ./old_be:/var/www
+      - ./old_be:/var/www/html
+    environment:
+      - ENVIRONMENT=development
