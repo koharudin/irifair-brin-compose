@@ -11,6 +11,10 @@ services:
       - ./docker-dev-volumes/minio_data:/data # Volume untuk menyimpan data
       - ./docker-dev-volumes/minio_config:/root/.minio # Volume untuk menyimpan konfigurasi
     command: server /data --console-address ":9001"
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
   db:
     ports:
       - 5432:5432
@@ -28,7 +32,9 @@ services:
     ports :     
       - 81:80
     volumes:
-       - ./old_fe:/var/www
+      - ./old_fe:/var/www/html
+    environment:
+      - ENVIRONMENT=production
   old_be :  
     tty: true
     build : 
