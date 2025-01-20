@@ -1,6 +1,12 @@
 [submodule "old_fe"]
 	path = old_fe
 	url = https://gitlab.brin.go.id/brinrockstar/irif-frontend
+	branch = copy_master_15012025
 [submodule "old_be"]
 	path = old_be
 	url = https://gitlab.brin.go.id/brinrockstar/irif-backend
+	branch = copy_master_15012025
+[submodule "newapp"]
+	path = newapp
+	url = https://gitlab.brin.go.id/brinrockstar/irifairv2.git
+	branch = us_migration
