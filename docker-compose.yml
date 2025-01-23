@@ -46,3 +46,38 @@ services:
       - ./old_be:/var/www/html
     environment:
       - ENVIRONMENT=development
+  newapp :  
+    tty: true
+    build : 
+      context : .
+      dockerfile : Dockerfile-dev-app
+    ports :     
+        - 83:80
+    volumes:
+      - ./newapp:/var/www
+      - ./newapp/public:/var/www/html
+      - /var/www/storage
+    environment:
+      - ENVIRONMENT=development
+  frontend :  
+    tty: true
+    build : 
+      context : .
+      dockerfile : Dockerfile-dev-frontend
+    command: "npm run dev"
+    ports :     
+        - 84:3000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+  vristo-next-main :  
+    tty: true
+    build : 
+      context : .
+      dockerfile : Dockerfile-dev-vristo-next-main
+    command: "yarn dev"
+    ports :     
+        - 85:3000
+    volumes:
+      - ./vristo-next-main:/app
+      - /app/node_modules

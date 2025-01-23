@@ -10,3 +10,11 @@
 	path = newapp
 	url = https://gitlab.brin.go.id/brinrockstar/irifairv2.git
 	branch = us_migration
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/koharudin/irifair-next.git
+	branch = main
+[submodule "vristo-next-main"]
+	path = vristo-next-main
+	url = https://github.com/koharudin/vristo-next-main.git
+	branch = main

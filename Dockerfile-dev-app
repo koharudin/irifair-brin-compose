@@ -1,0 +1,47 @@
+FROM php:8.3.6-apache
+ENV APACHE_DOCUMENT_ROOT=/var/www
+
+RUN a2enmod rewrite
+RUN apt-get update && apt-get install -y libpq-dev && docker-php-ext-install pdo pdo_pgsql pgsql 
+
+RUN apt-get -y install git 
+RUN apt-get install -y \
+    libzip-dev \
+    zip \
+    && docker-php-ext-install zip
+# Install PHP Redis extension
+RUN pecl install redis && docker-php-ext-enable redis
+
+# Install Composer globally
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/compose
+
+WORKDIR ${APACHE_DOCUMENT_ROOT}
+COPY ./newapp/composer.json .
+#RUN composer update
+
+RUN mkdir -p ${APACHE_DOCUMENT_ROOT}/storage ${APACHE_DOCUMENT_ROOT}/logs ${APACHE_DOCUMENT_ROOT}/storage/framework/cache \
+${APACHE_DOCUMENT_ROOT}/storage/framework/sessions \
+${APACHE_DOCUMENT_ROOT}/storage/framework/testing \
+${APACHE_DOCUMENT_ROOT}/storage/framework/views
+
+# Ensure proper permissions for the Document Root
+RUN chown -R www-data:www-data ${APACHE_DOCUMENT_ROOT} \
+    && chown -R www-data:www-data ${APACHE_DOCUMENT_ROOT}/storage/framework/cache \
+    ${APACHE_DOCUMENT_ROOT}/storage/framework/sessions \
+    ${APACHE_DOCUMENT_ROOT}/storage/framework/testing \
+    ${APACHE_DOCUMENT_ROOT}/storage/framework/views \
+    && chmod -R 755 ${APACHE_DOCUMENT_ROOT}
+
+# Install Node.js (for Yarn installation)
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
+
+# Install Yarn (add the Yarn APT repository and then install)
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | tee /etc/apt/trusted.gpg.d/yarn.asc \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    && apt-get update && apt-get install yarn
+
+COPY newapp/package.json .
+RUN yarn add vite
+RUN yarn install 
