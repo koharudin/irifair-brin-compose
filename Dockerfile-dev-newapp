@@ -1,0 +1,31 @@
+FROM php:8.3.6-apache
+ENV APACHE_DOCUMENT_ROOT=/var/www/html
+
+RUN a2enmod rewrite
+RUN apt-get update && apt-get install -y libpq-dev && docker-php-ext-install pdo pdo_pgsql pgsql 
+
+RUN apt-get -y install git 
+RUN apt-get install -y \
+    libzip-dev \
+    zip \
+    && docker-php-ext-install zip
+
+    # Install Node.js and Yarn
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+&& apt-get install -y nodejs \
+&& npm install --global yarn \
+&& apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install Composer globally
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+WORKDIR ${APACHE_DOCUMENT_ROOT}
+#COPY ./newapp/composer.json .
+#RUN composer update
+
+
+# Ensure proper permissions for the Document Root
+RUN chown -R www-data:www-data ${APACHE_DOCUMENT_ROOT} \
+    && chmod -R 755 ${APACHE_DOCUMENT_ROOT}
+
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
